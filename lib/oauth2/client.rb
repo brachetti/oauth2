@@ -110,7 +110,7 @@ module OAuth2
         # on non-redirecting 3xx statuses, just return the response
         response
       when 400..599
-        logger.error "Request failed on url #{url} with body #{opts[:body].to_s}"
+        #logger.error "Request failed on url #{url} with body #{opts[:body].to_s}"
         error = Error.new(response)
         raise(error) if opts.fetch(:raise_errors, options[:raise_errors])
         response.error = error
