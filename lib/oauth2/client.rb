@@ -86,8 +86,8 @@ module OAuth2
     # @option opts [Symbol] :parse @see Response::initialize
     # @yield [req] The Faraday request
     def request(verb, url, opts = {}) # rubocop:disable CyclomaticComplexity, MethodLength, Metrics/AbcSize
-      connection.request :logger, ::Logger.new($stdout)
-      connection.response :logger, ::Logger.new($stdout)
+      logger = ::Logger.new($stdout)
+      connection.response :logger, logger if ENV['OAUTH_DEBUG'] == 'true'
 
       url = connection.build_url(url, opts[:params]).to_s
 
@@ -110,6 +110,7 @@ module OAuth2
         # on non-redirecting 3xx statuses, just return the response
         response
       when 400..599
+        logger.error "Request failed on url #{url} with body #{opts[:body].to_s}"
         error = Error.new(response)
         raise(error) if opts.fetch(:raise_errors, options[:raise_errors])
         response.error = error
