@@ -27,14 +27,14 @@ module OAuth2
       def get_token(code, params = {}, opts = {})
         logger = ::Logger.new($stdout)
         logger.info "Params before #{params.to_s}"
-        params['redirect_uri'] = params['redirect_uri'].split('?').first if params.has_key? 'redirect_uri'
+        params[:redirect_uri] = params[:redirect_uri].split('?').first if params.has_key? :redirect_uri
         params = {'grant_type' => 'authorization_code', 'code' => code}.merge(client_params).merge(params)
         logger.info "Params after #{params.to_s}"
         @client.get_token(params, opts)
       end
 
       def progname=
-
+        "OAuth2::Strategy::AuthCode"
       end
     end
   end
